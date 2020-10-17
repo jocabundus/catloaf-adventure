@@ -1402,22 +1402,22 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 Game.playSound(Sounds.DoorBlocked);
             }
             break;
-        case SpriteIds.CHICKEN:
-            if(Map.isPassable(pushX, pushY))
-            {
-                Map.set(pushX, pushY, spriteId);
-                Game.drawSprite(drawPushX, drawPushY, spriteId);
-                Game.playSound(Sounds.Chirp);
-            }
-            else
-            {
-                Map.set(lastX, lastY, spriteId);
-                Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-                Game.drawSprite(drawLastX, drawLastY, spriteId);
-                Game.drawSprite(drawMapX, drawMapY, SpriteIds.CATLOAF);
-                Game.playSound(Sounds.Chirp);
-            }
-            break;
+        //case SpriteIds.CHICKEN:
+        //    if(Map.isPassable(pushX, pushY))
+        //    {
+        //        Map.set(pushX, pushY, spriteId);
+        //        Game.drawSprite(drawPushX, drawPushY, spriteId);
+        //        Game.playSound(Sounds.Chirp);
+        //    }
+        //    else
+        //    {
+        //        Map.set(lastX, lastY, spriteId);
+        //        Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
+        //        Game.drawSprite(drawLastX, drawLastY, spriteId);
+        //        Game.drawSprite(drawMapX, drawMapY, SpriteIds.CATLOAF);
+        //        Game.playSound(Sounds.Chirp);
+        //    }
+        //    break;
         case SpriteIds.PUSHSTOP:
             break;
         case SpriteIds.LIGHTLEFT:
