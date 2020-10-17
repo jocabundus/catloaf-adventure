@@ -291,7 +291,7 @@ var Map = {
                 this.sprites.set(door.x, door.y, door.open.sprite);
                 this.setPassable(door.x, door.y, door.open.passable);
                 this.showBuried(door.x, door.y, door.open.showBuried);
-                if(updateScreen) Game.drawSprite(door.x-player.gridX, door.y-player.gridY, door.open.sprite);
+                if(updateScreen) Sprites.drawSprite(door.x-player.gridX, door.y-player.gridY, door.open.sprite);
             }
         }
         return changed;
