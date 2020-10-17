@@ -1,7 +1,15 @@
 /**
- * This file is part of CATLOAF 2600.
- * Copyright (C) 2007-2020 Joe King - All Rights Reserved
- * https://games.joeking.us/
+ * This file is part of CATLOAF ADVENTURE.
+ * @author Joe King
+ * @copyright Joe King LLC 2020
+ * @requires input
+ * @requires gfx
+ * @requires sound
+ * @requires sprites
+ * @requires playertype
+ * @requires map
+ * @requires mobs
+ * @requires data
  */
 "use strict";
 
@@ -252,11 +260,11 @@ function DRAW_MainMenu()
     GFX.print("|   |                              |   |");
     GFX.print("|   |                              |   |");
     GFX.print("----------------------------------------");
-    Game.drawSpriteXY( 8, 11, SpriteIds.CATLOAFRIGHT);
-    Game.drawSpriteXY(13, 12, SpriteIds.SWORD);
-    Game.drawSpriteXY(29, 11, SpriteIds.CATLOAFLEFT);
-    Game.drawSpriteXY(24, 12, SpriteIds.SWORD, null, SpriteFlags.Flip);
-    Game.drawSpriteXY(18, 11, SpriteIds.CHICKEN);
+    Sprites.drawSpriteXY( 8, 11, SpriteIds.CATLOAFRIGHT);
+    Sprites.drawSpriteXY(13, 12, SpriteIds.SWORD);
+    Sprites.drawSpriteXY(29, 11, SpriteIds.CATLOAFLEFT);
+    Sprites.drawSpriteXY(24, 12, SpriteIds.SWORD, null, SpriteFlags.Flip);
+    Sprites.drawSpriteXY(18, 11, SpriteIds.CHICKEN);
     //GFX.writeText("  Catloaf Adventure", 4, 14);
     GFX.writeText("Copyright (C) 2020", 18, 9);
     GFX.writeText("(H)How to Play   (A)About Game", 21, 7);
@@ -270,7 +278,7 @@ STATE_MainMenu.prototype.go = function(keyCode, isRepeat, initialize)
     {
         this.nextState = GameStates.NoChange;
         this.wait = false;
-        Game.playSound(Sounds.Title);
+        Sound.playSound(Sounds.Title);
     }
     
     if(initialize)
@@ -286,11 +294,11 @@ STATE_MainMenu.prototype.go = function(keyCode, isRepeat, initialize)
     {
         if(keyCode == KeyCodes.space)
         {
-            Game.drawSpriteXY(18, 11, SpriteIds.CHICKENDEAD);
-            Game.playSound(Sounds.Flash);
+            Sprites.drawSpriteXY(18, 11, SpriteIds.CHICKENDEAD);
+            Sound.playSound(Sounds.Flash);
             var delay = FLASH(0, null, 2);
             setTimeout(function(){
-                //Game.playSound(Sounds.Enter);
+                //Sound.playSound(Sounds.Enter);
                 GFX.cls();
             }, delay+250);
             setTimeout(function(self){
@@ -320,11 +328,11 @@ function PLAYER_Draw_Crank()
     {
         catloafSprite = SpriteIds.CATLOAFCRANKTRY;
     }
-    Game.drawSprite(player.x, player.y, catloafSprite, null, (player.faceLeft ? SpriteFlags.Flip : 0));
+    Sprites.drawSprite(player.x, player.y, catloafSprite, null, (player.faceLeft ? SpriteFlags.Flip : 0));
     if(player.weapon == Weapons.Sword && player.selectedItem > 0)
     {
         var selected = player.selectedItem;
-        Game.drawSprite(player.x+(player.faceRight ? 1 : -1), player.y, selected, null, (player.faceLeft ? SpriteFlags.Flip : 0) | SpriteFlags.AnchorLeft);
+        Sprites.drawSprite(player.x+(player.faceRight ? 1 : -1), player.y, selected, null, (player.faceLeft ? SpriteFlags.Flip : 0) | SpriteFlags.AnchorLeft);
     }
 }
 
@@ -338,10 +346,10 @@ function PLAYER_Draw(force)
     if(player.hasMoved) {
         var mapX = (player.oldX + player.gridX);
         var mapY = (player.oldY + player.gridY);
-        Game.drawSprite(player.oldX, player.oldY, Map.get(mapX, mapY));
+        Sprites.drawSprite(player.oldX, player.oldY, Map.get(mapX, mapY));
         if(player.weapon != Weapons.None && player.selectedItem > 0)
         {
-            Game.drawSprite(player.oldX+(player.faceRight ? 1 : -1), player.oldY, Map.get(mapX+(player.faceRight ? 1 : -1), mapY));
+            Sprites.drawSprite(player.oldX+(player.faceRight ? 1 : -1), player.oldY, Map.get(mapX+(player.faceRight ? 1 : -1), mapY));
         }
     }
     
@@ -350,31 +358,31 @@ function PLAYER_Draw(force)
         if(player.dark == 0) {
             if(player.life > 0) {
                 if(player.weapon == Weapons.None || player.weapon == Weapons.Erase) {
-                    Game.drawSprite(player.x, player.y, SpriteIds.CATLOAF);
+                    Sprites.drawSprite(player.x, player.y, SpriteIds.CATLOAF);
                 } else {
-                    Game.drawSprite(player.x, player.y, player.faceRight ? SpriteIds.CATLOAFRIGHT : SpriteIds.CATLOAFLEFT);
+                    Sprites.drawSprite(player.x, player.y, player.faceRight ? SpriteIds.CATLOAFRIGHT : SpriteIds.CATLOAFLEFT);
                 }
             } else {
-                Game.drawSprite(player.x, player.y, SpriteIds.CATLOAFDEAD);
+                Sprites.drawSprite(player.x, player.y, SpriteIds.CATLOAFDEAD);
             }
         } else {
             if(player.life > 0) {
-                Game.drawSprite(player.x, player.y, SpriteIds.CATLOAFDARK);
+                Sprites.drawSprite(player.x, player.y, SpriteIds.CATLOAFDARK);
             } else {
-                Game.drawSprite(player.x, player.y, SpriteIds.CATLOAFDEAD);
+                Sprites.drawSprite(player.x, player.y, SpriteIds.CATLOAFDEAD);
             }
         }
         if(player.weapon == Weapons.Sword && player.selectedItem > 0)
         {
             var selected = player.selectedItem;
             var offset = (selected == SpriteIds.BOMB) ? 0 : 1;
-            Game.drawSprite(player.x+(player.faceRight ? 1 : -1), player.y, selected, null, (player.faceLeft ? SpriteFlags.Flip : 0) | SpriteFlags.AnchorBottom | SpriteFlags.AnchorLeft);
+            Sprites.drawSprite(player.x+(player.faceRight ? 1 : -1), player.y, selected, null, (player.faceLeft ? SpriteFlags.Flip : 0) | SpriteFlags.AnchorBottom | SpriteFlags.AnchorLeft);
         }
         if(player.weapon == Weapons.Erase)
         {
             var mapX = (player.x + player.gridX);
             var mapY = (player.y + player.gridY);
-            Game.drawSprite(player.x+(player.faceRight ? 1 : -1), player.y, Map.get(mapX+(player.faceRight ? 1 : -1), mapY));
+            Sprites.drawSprite(player.x+(player.faceRight ? 1 : -1), player.y, Map.get(mapX+(player.faceRight ? 1 : -1), mapY));
         }
     }
 }
@@ -393,9 +401,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
         case 0:
             GFX.cls();
             
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER);
             GFX.writeText("STRESSED VILLAGER", 3, 14);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             
             setTimeout(function(self){ if(self.step < 2) self.step = 2; }, 1500, this);
             
@@ -406,9 +414,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for timeout or keypress
             break;
        case 2:
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("CATLOAF!", 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -416,9 +424,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for keypress
             break;
        case 4:
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("Please help us!", 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -426,9 +434,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for keypress
             break;
        case 6:
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER+2);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER+2);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("Spiders have attacked our village.", 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -436,9 +444,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for keypress
             break;
        case 8:
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("People are missing!", 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -446,9 +454,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for keypress
             break;
         case 10:
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER+2, null, SpriteFlags.Flip);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER+2, null, SpriteFlags.Flip);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("We fear the worst.", 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -456,9 +464,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for keypress
             break;
        case 12:
-            Game.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.VILLAGER+1);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("You may be our only hope.", 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -467,9 +475,9 @@ STATE_Intro.prototype.go = function(keyCode, isRepeat, initialize)
             break;
        case 14:
             GFX.cls();
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.timeouts.push(setTimeout(function(){
-                    Game.playSound(Sounds.Enter);
+                    Sound.playSound(Sounds.Enter);
                 }, 1000));
             this.timeouts.push(setTimeout(function(){
                 GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("Entering the village...", 10, 15);
@@ -519,9 +527,9 @@ STATE_Rescued.prototype.go = function(keyCode, isRepeat, initialize)
         case 0:
             GFX.cls();
             
-            Game.drawSpriteXY(18, 6, SpriteIds.CAPTIVE);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.CAPTIVE);
             GFX.writeText("RESCUED VILLAGER", 3, 14);
-            Game.playSound(Sounds.Title);
+            Sound.playSound(Sounds.Title);
             
             //setTimeout(function(self){ if(this.step < 2) this.step = 2; }, 1500, self);
             
@@ -532,7 +540,7 @@ STATE_Rescued.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for timeout or keypress
             break;
        case 2:
-            Game.drawSpriteXY(18, 6, SpriteIds.CAPTIVERESCUED);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.CAPTIVERESCUED);
             var responses = [
                 "CATLOAF SAVES!",
                 "THANK YOU CATLOAF!",
@@ -540,8 +548,8 @@ STATE_Rescued.prototype.go = function(keyCode, isRepeat, initialize)
             ];
             var response = responses[parseInt(Math.random()*responses.length)];
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText(response, 14, 15, true);
-            Game.playSound(Sounds.Bonus);
-            Game.playSound(Sounds.Start);
+            Sound.playSound(Sounds.Bonus);
+            Sound.playSound(Sounds.Start);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -551,7 +559,7 @@ STATE_Rescued.prototype.go = function(keyCode, isRepeat, initialize)
         case 4:
             var captives = Game.getVar(GameVars.CAPTIVES);
             GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("Remaining: "+captives.toString(), 14, 15, true);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1;
             return GameStates.NoChange;
             break;
@@ -560,7 +568,7 @@ STATE_Rescued.prototype.go = function(keyCode, isRepeat, initialize)
             break;
         case 6:
             this.step = 0;
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             return GameStates.Previous;
             break;
     }
@@ -591,9 +599,9 @@ STATE_TreasureChest.prototype.go = function(keyCode, isRepeat, initialize)
         case 0:
             GFX.cls();
             
-            Game.drawSpriteXY(18, 8, SpriteIds.TREASURECHEST);
+            Sprites.drawSpriteXY(18, 8, SpriteIds.TREASURECHEST);
             GFX.writeText("TREASURE CHEST", 3, 14);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             
             setTimeout(function(self){ if(self.step < 2) self.step = 2; }, 2000, this);
             
@@ -604,15 +612,15 @@ STATE_TreasureChest.prototype.go = function(keyCode, isRepeat, initialize)
             // wait for timeout or keypress
             break;
        case 2:
-            Game.drawSpriteXY(18, 4, SpriteIds.OPENCHEST1);
-            Game.drawSpriteXY(18, 9, SpriteIds.OPENCHEST2);
-            Game.drawSpriteXY(18, 6, buried, null, SpriteFlags.Trans);
+            Sprites.drawSpriteXY(18, 4, SpriteIds.OPENCHEST1);
+            Sprites.drawSpriteXY(18, 9, SpriteIds.OPENCHEST2);
+            Sprites.drawSpriteXY(18, 6, buried, null, SpriteFlags.Trans);
             if(typeof(names[buried]) !== "undefined")
             {
                 GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText(names[buried], 15, 15, true);
             }
-            Game.playSound(Sounds.Bonus);
-            Game.playSound(Sounds.Start);
+            Sound.playSound(Sounds.Bonus);
+            Sound.playSound(Sounds.Start);
             setTimeout(function(self){ if(self.step < 4) self.step = 4; }, 5000, this);
             this.step += 1
             return GameStates.NoChange;
@@ -630,12 +638,12 @@ STATE_TreasureChest.prototype.go = function(keyCode, isRepeat, initialize)
                 {
                     self.count += 1;
                     GFX.writeText("   "+self.count+" PCS   ", 15, 15, true);
-                    Game.playSound(Sounds.Point);
+                    Sound.playSound(Sounds.Point);
                     if(self.count >= self.stopCount)
                     {
                         clearInterval(self.interval);
-                        Game.playSound(Sounds.Bonus);
-                        Game.playSound(Sounds.Title);
+                        Sound.playSound(Sounds.Bonus);
+                        Sound.playSound(Sounds.Title);
                         setTimeout(function(self){ if(self.step < 6) self.step = 6; }, 5000, self);
                     }
                 },30,this);
@@ -645,7 +653,7 @@ STATE_TreasureChest.prototype.go = function(keyCode, isRepeat, initialize)
                 GFX.writeText("Added to inventory!", 15, 15, true);
                 Game.player.addItem(buried);
             }
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             this.step += 1
             return GameStates.NoChange;
             break;
@@ -656,8 +664,8 @@ STATE_TreasureChest.prototype.go = function(keyCode, isRepeat, initialize)
                 clearInterval(this.interval);
                 var gold = Game.player.getItemQty(SpriteIds.GOLD)+100;
                 GFX.writeText("   "+gold+" PCS   ", 15, 15, true);
-                Game.playSound(Sounds.Bonus);
-                Game.playSound(Sounds.Title);
+                Sound.playSound(Sounds.Bonus);
+                Sound.playSound(Sounds.Title);
                 this.step += 1;
                 return GameStates.NoChange;
             }
@@ -665,7 +673,7 @@ STATE_TreasureChest.prototype.go = function(keyCode, isRepeat, initialize)
         case 6:
             this.step = 0;
             Game.player.addItem(SpriteIds.GOLD, 100);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             return GameStates.Previous;
             break;
     }
@@ -792,7 +800,7 @@ function STATE_InitGame() {}
 STATE_InitGame.prototype.go = function(keyCode)
 {
     DATA_LoadMap();
-    Game.playSound(Sounds.Respawn);
+    Sound.playSound(Sounds.Respawn);
     Game.startTimer();
     return GameStates.Next;
 }
@@ -815,12 +823,12 @@ STATE_Crank.prototype.go = function(keyCode, isRepeat, initialize)
     {
         if(Map.shiftDoor(SpriteIds.LOGRIGHT,  1,  0))
         {
-            Game.playSound(Sounds.PushWall);
+            Sound.playSound(Sounds.PushWall);
             player.selectedItem = (player.selectedItem == SpriteIds.CRANKUP) ? SpriteIds.CRANKDOWN : SpriteIds.CRANKUP;
         }
         else
         {
-            Game.playSound(Sounds.Ignite);
+            Sound.playSound(Sounds.Ignite);
             player.selectedItem = (player.selectedItem == SpriteIds.CRANKUP) ? SpriteIds.CRANKTRY : SpriteIds.CRANKUP;
         }
     }
@@ -828,12 +836,12 @@ STATE_Crank.prototype.go = function(keyCode, isRepeat, initialize)
     {
         if(Map.shiftDoor(SpriteIds.LOGRIGHT, -1,  0))
         {
-            Game.playSound(Sounds.PushWall);
+            Sound.playSound(Sounds.PushWall);
             player.selectedItem = (player.selectedItem == SpriteIds.CRANKUP) ? SpriteIds.CRANKDOWN : SpriteIds.CRANKUP;
         }
         else
         {
-            Game.playSound(Sounds.Ignite);
+            Sound.playSound(Sounds.Ignite);
             player.selectedItem = (player.selectedItem == SpriteIds.CRANKUP) ? SpriteIds.CRANKTRY : SpriteIds.CRANKUP;
         }
     }
@@ -881,7 +889,7 @@ STATE_PlayGame.prototype.go = function(keyCode, isRepeat, initialize)
             {
                 player.weapon = Weapons.Sword;
                 PLAYER_Draw(true);
-                Game.playSound(Sounds.Respawn);
+                Sound.playSound(Sounds.Respawn);
                 if(Map.isKillable(mapX, mapY))
                 {
                     PLAYER_Move(0, 0); // this is where MAP_TryKill() is called
@@ -895,11 +903,11 @@ STATE_PlayGame.prototype.go = function(keyCode, isRepeat, initialize)
                     player.x += (player.faceRight ? -1 : 1);
                     player.weapon = Weapons.Sword;
                     PLAYER_Draw(true);
-                    Game.playSound(Sounds.Respawn);
+                    Sound.playSound(Sounds.Respawn);
                 }
                 else
                 {
-                    Game.playSound(Sounds.Blocked);
+                    Sound.playSound(Sounds.Blocked);
                 }
             }
         }
@@ -917,11 +925,11 @@ STATE_PlayGame.prototype.go = function(keyCode, isRepeat, initialize)
                     PLAYER_PutItemAway();
                     MAP_Draw(mapX, mapY, player.selectedItem);
                     player.selectedItem = SpriteIds.SHOVEL;  // TODO -- check for broken shovel?
-                    Game.playSound(Sounds.Respawn);
+                    Sound.playSound(Sounds.Respawn);
                 break;
                 default:
                     PLAYER_PutItemAway();
-                    Game.playSound(Sounds.Respawn);
+                    Sound.playSound(Sounds.Respawn);
                 break;
             }
             this.holdTimer = 1;
@@ -945,7 +953,7 @@ STATE_PlayGame.prototype.go = function(keyCode, isRepeat, initialize)
             Map.addGlobalMob(bomb);
             PLAYER_PutItemAway();
             player.addItem(SpriteIds.BOMB, -1);
-            Game.playSound(Sounds.Ignite);
+            Sound.playSound(Sounds.Ignite);
         }
     }
     else if(Game.getKeyUp() == KeyCodes.S && this.holdTimer)
@@ -953,7 +961,7 @@ STATE_PlayGame.prototype.go = function(keyCode, isRepeat, initialize)
         if(player.weapon != Weapons.None && player.selectedItem == SpriteIds.BOMB)
         {
             PLAYER_PutItemAway();
-            Game.playSound(Sounds.Respawn);
+            Sound.playSound(Sounds.Respawn);
         }
         this.holdTimer = 0;
     }
@@ -963,7 +971,7 @@ STATE_PlayGame.prototype.go = function(keyCode, isRepeat, initialize)
     if(player.life <= 0)
     {
         nextState = GameStates.Dead;
-        Game.playSound(Sounds.Flash);
+        Sound.playSound(Sounds.Flash);
     }
     
     return (nextState === null) ? GameStates.NoChange : nextState;
@@ -1049,7 +1057,7 @@ STATE_Dead.prototype.go = function(keyCode, isRepeat, initialize)
         case 3:
             GFX.color(null, 4);
             GFX.writeText("[    YOU GOT PWNED!!!    ]", 4, 15);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             setTimeout(function(self){ self.step += 1 }, 300, STATE_Dead);
             STATE_Dead.step += 1;
             return GameStates.NoChange;
@@ -1065,7 +1073,7 @@ STATE_Dead.prototype.go = function(keyCode, isRepeat, initialize)
             GFX.color(null, 1);
             GFX.writeText("[        LIVES: " + player.lives.toString() + "        ]", 4, 15);
             GFX.color(null, 0);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             setTimeout(function(self){ self.step += 1 }, 300, STATE_Dead);
             STATE_Dead.step += 1;
             return GameStates.NoChange;
@@ -1081,7 +1089,7 @@ STATE_Dead.prototype.go = function(keyCode, isRepeat, initialize)
             if(player.lives <= 0)
             {
                 GFX.cls();
-                Game.playSound(Sounds.Meatloaf);
+                Sound.playSound(Sounds.Meatloaf);
                 setTimeout(function(self){
                     self.nextState = GameStates.GameOver;
                 }, 1000, STATE_Dead);
@@ -1090,7 +1098,7 @@ STATE_Dead.prototype.go = function(keyCode, isRepeat, initialize)
             }
             else
             {
-                Game.playSound(Sounds.Respawn);
+                Sound.playSound(Sounds.Respawn);
                 PLAYER_Respawn();
                 return GameStates.PlayGame;
             }
@@ -1129,12 +1137,12 @@ function PLAYER_Touch(spriteId, mapX, mapY)
             player.life = 0;
             break;
         case SpriteIds.CAVESOUND:
-            Game.playSound(Sounds.EnterCave);
+            Sound.playSound(Sounds.EnterCave);
             break;
         case SpriteIds.GOLD:
             player.addItem(spriteId, 10);
             Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-            Game.playSound(Sounds.PickupKey);
+            Sound.playSound(Sounds.PickupKey);
             break;
         case SpriteIds.TREASURECHEST:
             nextState = GameStates.Treasure;
@@ -1151,7 +1159,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:SIGN READS",
                 description: "7:Northern Caverns"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.SOUTHCAVESIGN:
             nextState = GameStates.ViewItem;
@@ -1160,7 +1168,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:SIGN READS",
                 description: "7:Southern Caverns"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.FORESTSIGN:
             nextState = GameStates.ViewItem;
@@ -1169,7 +1177,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:SIGN READS",
                 description: "7:Haunted Forest"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.STONEWALLSIGN:
             nextState = GameStates.ViewItem;
@@ -1178,7 +1186,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:SIGN READS",
                 description: "7:Graveyard"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.LOGFRAME1:
             nextState = GameStates.ViewItem;
@@ -1187,7 +1195,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:Sir Fry Dinbutter",
                 description: "7:1825 - 1843\n\n11:DIED OF GLUTTONY"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.LOGFRAME2:
             nextState = GameStates.ViewItem;
@@ -1196,7 +1204,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:Sir Han Gryloaf",
                 description: "7:1811 - 1837\n\n11:DIED HUNGRY AND ANGRY"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.LOGFRAME3:
             nextState = GameStates.ViewItem;
@@ -1205,7 +1213,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: "15:Sir Oat Reagan",
                 description: "7:1799 - 1821\n\n11:DIED OF DYSENTERY"
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.LIBRARY:
             nextState = GameStates.ViewItem;
@@ -1249,18 +1257,18 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 name: title,
                 description: desc
             };
-            Game.playSound(Sounds.Mystery);
+            Sound.playSound(Sounds.Mystery);
             break;
         case SpriteIds.BEAMTRAPON:
             if(Map.showDoor(SpriteIds.LOG))
             {
-                Game.playSound(Sounds.LightSwitch);
+                Sound.playSound(Sounds.LightSwitch);
             }
             break;
         case SpriteIds.BEAMTRAPOFF:
             if(Map.hideDoor(SpriteIds.LOG))
             {
-                Game.playSound(Sounds.LightSwitch);
+                Sound.playSound(Sounds.LightSwitch);
             }
             break;
         case SpriteIds.BEAMTRIGGER:
@@ -1296,7 +1304,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                         if(beamX == swordX && beamY == mapY)
                         {
                             player.setItemQty(SpriteIds.SWORDHP, 0);
-                            Game.playSound(Sounds.Meatloaf);
+                            Sound.playSound(Sounds.Meatloaf);
                             break;
                         }
                     }
@@ -1310,12 +1318,12 @@ function PLAYER_Touch(spriteId, mapX, mapY)
             }
             if(player.life > 0)
             {
-                Game.playSound(Sounds.Flash);
+                Sound.playSound(Sounds.Flash);
             }
             for(var i = 0; i < onsprites.length; i++)
             {
                 var sprite = onsprites[i];
-                Game.drawSprite(sprite.x, sprite.y, sprite.sprite);
+                Sprites.drawSprite(sprite.x, sprite.y, sprite.sprite);
             }
             var self = PLAYER_Move;
             self.intervalCount = 0;
@@ -1325,7 +1333,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
                 for(var i = 0; i < sprites.length; i++)
                 {
                     var sprite = sprites[i];
-                    Game.drawSprite(sprite.x, sprite.y, sprite.sprite);
+                    Sprites.drawSprite(sprite.x, sprite.y, sprite.sprite);
                 }
                 self.intervalCount += 1;
                 if(self.intervalCount >= 30)
@@ -1336,86 +1344,86 @@ function PLAYER_Touch(spriteId, mapX, mapY)
             break;
         case SpriteIds.KEYGOLD:
             player.addItem(spriteId);
-            Game.playSound(Sounds.PickupKey);
+            Sound.playSound(Sounds.PickupKey);
             Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
             break;
         case SpriteIds.KEYSILVER:
             player.addItem(spriteId);
-            Game.playSound(Sounds.PickupKey);
+            Sound.playSound(Sounds.PickupKey);
             break;
         case SpriteIds.BRONZEKEY:
             player.addItem(spriteId);
-            Game.playSound(Sounds.PickupKey);
+            Sound.playSound(Sounds.PickupKey);
             Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
             break;
         case SpriteIds.GATEKEY:
             player.addItem(spriteId);
-            Game.playSound(Sounds.PickupKey);
+            Sound.playSound(Sounds.PickupKey);
             Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
             break;
         case SpriteIds.KEYSTONE:
             player.addItem(spriteId);
-            Game.playSound(Sounds.PickupKey);
+            Sound.playSound(Sounds.PickupKey);
             break;
         case SpriteIds.DOORGOLD:
             if(player.hasItem(SpriteIds.KEYGOLD)) {
                 Map.setPassable(mapX, mapY);
                 Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-                Game.playSound(Sounds.Unlock);
+                Sound.playSound(Sounds.Unlock);
             } else {
-                Game.playSound(Sounds.DoorBlocked);
+                Sound.playSound(Sounds.DoorBlocked);
             }
             break;
         case SpriteIds.DOORSILVER:
             if(player.hasItem(SpriteIds.KEYSILVER)) {
                 Map.setPassable(mapX, mapY);
                 Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-                Game.playSound(Sounds.Unlock);
+                Sound.playSound(Sounds.Unlock);
             } else {
-                Game.playSound(Sounds.DoorBlocked);
+                Sound.playSound(Sounds.DoorBlocked);
             }
             break;
         case SpriteIds.BRONZEDOOR:
             if(player.hasItem(SpriteIds.BRONZEKEY)) {
                 Map.setPassable(mapX, mapY);
                 Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-                Game.playSound(Sounds.Unlock);
+                Sound.playSound(Sounds.Unlock);
             } else {
-                Game.playSound(Sounds.DoorBlocked);
+                Sound.playSound(Sounds.DoorBlocked);
             }
             break;
         case SpriteIds.GATEDOOR:
             if(player.hasItem(SpriteIds.GATEKEY)) {
                 Map.setPassable(mapX, mapY);
                 Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-                Game.playSound(Sounds.Unlock);
+                Sound.playSound(Sounds.Unlock);
             } else {
-                Game.playSound(Sounds.DoorBlocked);
+                Sound.playSound(Sounds.DoorBlocked);
             }
             break;
         case SpriteIds.DOORSTONE:
             if(player.hasItem(SpriteIds.KEYSTONE)) {
                 Map.setPassable(mapX, mapY);
                 Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-                Game.playSound(Sounds.Unlock);
+                Sound.playSound(Sounds.Unlock);
             } else {
-                Game.playSound(Sounds.DoorBlocked);
+                Sound.playSound(Sounds.DoorBlocked);
             }
             break;
         //case SpriteIds.CHICKEN:
         //    if(Map.isPassable(pushX, pushY))
         //    {
         //        Map.set(pushX, pushY, spriteId);
-        //        Game.drawSprite(drawPushX, drawPushY, spriteId);
-        //        Game.playSound(Sounds.Chirp);
+        //        Sprites.drawSprite(drawPushX, drawPushY, spriteId);
+        //        Sound.playSound(Sounds.Chirp);
         //    }
         //    else
         //    {
         //        Map.set(lastX, lastY, spriteId);
         //        Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-        //        Game.drawSprite(drawLastX, drawLastY, spriteId);
-        //        Game.drawSprite(drawMapX, drawMapY, SpriteIds.CATLOAF);
-        //        Game.playSound(Sounds.Chirp);
+        //        Sprites.drawSprite(drawLastX, drawLastY, spriteId);
+        //        Sprites.drawSprite(drawMapX, drawMapY, SpriteIds.CATLOAF);
+        //        Sound.playSound(Sounds.Chirp);
         //    }
         //    break;
         case SpriteIds.PUSHSTOP:
@@ -1441,7 +1449,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
             }
             player.addItem(spriteId);
             Map.set(mapX, mapY, SpriteIds.EMPTYSPACE);
-            Game.playSound(Sounds.Bonus);
+            Sound.playSound(Sounds.Bonus);
             break;
         case SpriteIds.ENDLEVEL:
             nextState = GameStates.Next;
@@ -1449,7 +1457,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
         case SpriteIds.LIGHTOFF:
             player.dark = 1
             GFX.cls();
-            Game.playSound(Sounds.LightSwitch);
+            Sound.playSound(Sounds.LightSwitch);
             break;
         case SpriteIds.LIGHTON:
             player.dark = 0;
@@ -1466,7 +1474,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
             Map.toggleDoor(SpriteIds.LOGFRAME1);
             Map.toggleDoor(SpriteIds.LOGFRAME2);
             Map.toggleDoor(SpriteIds.LOGFRAME3);
-            Game.playSound(Sounds.LightSwitch);
+            Sound.playSound(Sounds.LightSwitch);
             break;
         case SpriteIds.PICTURESWITCHON:
             Map.set(mapX, mapY, SpriteIds.PICTURESWITCHOFF);
@@ -1474,7 +1482,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
             Map.toggleDoor(SpriteIds.LOGFRAME1);
             Map.toggleDoor(SpriteIds.LOGFRAME2);
             Map.toggleDoor(SpriteIds.LOGFRAME3);
-            Game.playSound(Sounds.LightSwitch);
+            Sound.playSound(Sounds.LightSwitch);
             break;
         case SpriteIds.BEHINDPICTURE:
             var buried = Map.getBuried(mapX, mapY);
@@ -1503,19 +1511,19 @@ function PLAYER_Touch(spriteId, mapX, mapY)
         case SpriteIds.TIMEDOORTRIGGER:
             if(Map.showDoor(SpriteIds.TIMEDOOR))
             {
-                Game.playSound(Sounds.Unlock);
+                Sound.playSound(Sounds.Unlock);
                 var data = {
                     count: 0,
                     intervalId: 0
                 };
                 data.intervalId = setInterval(function(data){
                     data.count += 1;
-                    Game.playSound(Sounds.Chop);
+                    Sound.playSound(Sounds.Chop);
                     if(data.count >= 10)
                     {
                         clearInterval(data.intervalId);
                         Map.hideDoor(SpriteIds.TIMEDOOR);
-                        Game.playSound(Sounds.Unlock);
+                        Sound.playSound(Sounds.Unlock);
                     }
                 }, 1000, data);
             }
@@ -1526,7 +1534,7 @@ function PLAYER_Touch(spriteId, mapX, mapY)
         default:
             if(!Map.isPassable(mapX, mapY))
             {
-                Game.playSound(Sounds.Blocked);
+                Sound.playSound(Sounds.Blocked);
             }
             break;
     }
@@ -1600,7 +1608,7 @@ function PLAYER_Move(x, y)
                     if(Map.get(pushX, pushY) == SpriteIds.PUSHSTOP)
                     {
                         clearToMove = false;
-                        Game.playSound(Sounds.Blocked);
+                        Sound.playSound(Sounds.Blocked);
                         spriteId = SpriteIds.EMPTYSPACE; // don't check again
                     }
                     else
@@ -1626,11 +1634,11 @@ function PLAYER_Move(x, y)
                                 if(Map.get(pushX, pushY) == SpriteIds.SOLVEWALL1)
                                 {
                                     Game.setVar(GameVars.SOLVEDWALL1, true);
-                                    Game.playSound(Sounds.Meatloaf);
+                                    Sound.playSound(Sounds.Meatloaf);
                                     if(Game.getVar(GameVars.SOLVEDWALL2) && Game.getVar(GameVars.SOLVEDWALL3))
                                     {
                                         Map.hideDoor(SpriteIds.NORTHCAVEDOOR);
-                                        Game.playSound(Sounds.Bonus);
+                                        Sound.playSound(Sounds.Bonus);
                                     }
                                 }
                                 break;
@@ -1638,11 +1646,11 @@ function PLAYER_Move(x, y)
                                 if(Map.get(pushX, pushY) == SpriteIds.SOLVEWALL2)
                                 {
                                     Game.setVar(GameVars.SOLVEDWALL2, true);
-                                    Game.playSound(Sounds.Meatloaf);
+                                    Sound.playSound(Sounds.Meatloaf);
                                     if(Game.getVar(GameVars.SOLVEDWALL1) && Game.getVar(GameVars.SOLVEDWALL3))
                                     {
                                         Map.hideDoor(SpriteIds.NORTHCAVEDOOR);
-                                        Game.playSound(Sounds.Bonus);
+                                        Sound.playSound(Sounds.Bonus);
                                     }
                                 }
                                 break;
@@ -1650,11 +1658,11 @@ function PLAYER_Move(x, y)
                                 if(Map.get(pushX, pushY) == SpriteIds.SOLVEWALL3)
                                 {
                                     Game.setVar(GameVars.SOLVEDWALL3, true);
-                                    Game.playSound(Sounds.Meatloaf);
+                                    Sound.playSound(Sounds.Meatloaf);
                                     if(Game.getVar(GameVars.SOLVEDWALL1) && Game.getVar(GameVars.SOLVEDWALL2))
                                     {
                                         Map.hideDoor(SpriteIds.NORTHCAVEDOOR);
-                                        Game.playSound(Sounds.Bonus);
+                                        Sound.playSound(Sounds.Bonus);
                                     }
                                 }
                                 break;
@@ -1663,8 +1671,8 @@ function PLAYER_Move(x, y)
                         var pushed = Map.push(mapX, mapY, x, y);
                         drawPushX = (pushed.x - player.gridX);
                         drawPushY = (pushed.y - player.gridY);
-                        Game.drawSprite(drawPushX, drawPushY, spriteId, Map.isMirror(pushed.x, pushed.y) ? 8 : null, Map.isFlip(pushed.x, pushed.y) ? SpriteFlags.Flip : null);
-                        Game.playSound(Sounds.PushWall);
+                        Sprites.drawSprite(drawPushX, drawPushY, spriteId, Map.isMirror(pushed.x, pushed.y) ? 8 : null, Map.isFlip(pushed.x, pushed.y) ? SpriteFlags.Flip : null);
+                        Sound.playSound(Sounds.PushWall);
                         changeSpriteTo = -1;
                         spriteId = Map.get(mapX, mapY);
                     }
@@ -1718,7 +1726,7 @@ function PLAYER_Move(x, y)
                         if(spriteId == SpriteIds.VILLAGER)
                         {
                             Map.put(mapX, mapY, SpriteIds.VILLAGERHAPPY);
-                            Game.playSound(Sounds.Bonus);
+                            Sound.playSound(Sounds.Bonus);
                             PLAYER_PutItemAway();
                             tookAction = true;
                         }
@@ -1766,13 +1774,13 @@ function PLAYER_Move(x, y)
                                     player.weapon = Weapons.Erase;
                                     PLAYER_Draw(true);
                                     player.weapon = Weapons.None;
-                                    Game.playSound(Sounds.Respawn);
+                                    Sound.playSound(Sounds.Respawn);
                                 }
                             }
                             else
                             {
                                 clearToMove = false;
-                                Game.playSound(Sounds.Blocked);
+                                Sound.playSound(Sounds.Blocked);
                             }
                             changeSpriteTo = -1;
                             break;
@@ -1786,7 +1794,7 @@ function PLAYER_Move(x, y)
         }
         else
         {
-            Game.playSound(Sounds.Move);
+            Sound.playSound(Sounds.Move);
         }
     }
     
@@ -1809,12 +1817,12 @@ function PLAYER_Move(x, y)
     if(player.hasItem(SpriteIds.SWORD) && player.getItemQty(SpriteIds.SWORDHP) <= 0)
     {
         player.swapItem(SpriteIds.SWORD, SpriteIds.SWORDBROKEN);
-        Game.playSound(Sounds.Meatloaf);
+        Sound.playSound(Sounds.Meatloaf);
     }
     if(player.hasItem(SpriteIds.SHOVEL) && player.getItemQty(SpriteIds.SHOVELHP) <= 0)
     {
         player.swapItem(SpriteIds.SHOVEL, SpriteIds.SHOVELBROKEN);
-        Game.playSound(Sounds.Meatloaf);
+        Sound.playSound(Sounds.Meatloaf);
     }
     
     if(newRoom)
@@ -1979,11 +1987,11 @@ function SPRITE_AddBlinkSprite(x, y, spriteId, repeat)
         var inRoom = (Map.getRoomId() == data.roomId);
         if(inRoom) {
             if((data.count & 3) == 0) {
-                Game.drawSprite(data.x, data.y, data.spriteId);
+                Sprites.drawSprite(data.x, data.y, data.spriteId);
             } else if((data.count & 3) == 2) {
-                Game.drawSprite(data.x, data.y, data.spriteId);
+                Sprites.drawSprite(data.x, data.y, data.spriteId);
             } else {
-                Game.drawSprite(data.x, data.y, Map.get(data.mapX, data.mapY));
+                Sprites.drawSprite(data.x, data.y, Map.get(data.mapX, data.mapY));
                 PLAYER_Draw(true);
             }
         }
@@ -1991,7 +1999,7 @@ function SPRITE_AddBlinkSprite(x, y, spriteId, repeat)
         if(data.count >= data.repeat) {
             clearInterval(data.intervalId);
             if(inRoom) {
-                Game.drawSprite(data.x, data.y, Map.get(data.mapX, data.mapY));
+                Sprites.drawSprite(data.x, data.y, Map.get(data.mapX, data.mapY));
                 PLAYER_Draw(true);
             }
         }
@@ -2016,11 +2024,11 @@ function SPIDER_Draw(x, y, state, timer)
     {
         case Spider.prototype.still:
             timer = parseInt(timer / 10);
-            Game.drawSprite(drawX, drawY, (timer & 1) ? SpriteIds.SPIDER2 : SpriteIds.SPIDER);
+            Sprites.drawSprite(drawX, drawY, (timer & 1) ? SpriteIds.SPIDER2 : SpriteIds.SPIDER);
         break;
         case Spider.prototype.walk:
             timer = parseInt(timer / 2);
-            Game.drawSprite(drawX, drawY, (timer & 1) ? SpriteIds.SPIDER2 : SpriteIds.SPIDER);
+            Sprites.drawSprite(drawX, drawY, (timer & 1) ? SpriteIds.SPIDER2 : SpriteIds.SPIDER);
         break;
     }
 }
@@ -2030,7 +2038,7 @@ function MIRRORLOAF_Draw(x, y, state, timer)
     var player = Game.player;
     var drawX = x - player.gridX;
     var drawY = y - player.gridY;
-    Game.drawSprite(drawX, drawY, SpriteIds.MIRRORLOAF);
+    Sprites.drawSprite(drawX, drawY, SpriteIds.MIRRORLOAF);
 }
 
 function BOMB_Draw(x, y, state, timer)
@@ -2038,7 +2046,7 @@ function BOMB_Draw(x, y, state, timer)
     var player = Game.player;
     var drawX = x - player.gridX;
     var drawY = y - player.gridY;
-    Game.drawSprite(drawX, drawY, (timer & 1) ? SpriteIds.BOMBLIT1 : SpriteIds.BOMBLIT2);
+    Sprites.drawSprite(drawX, drawY, (timer & 1) ? SpriteIds.BOMBLIT1 : SpriteIds.BOMBLIT2);
 }
 
 function PICTURE_Draw(x, y, timer)
@@ -2049,7 +2057,7 @@ function PICTURE_Draw(x, y, timer)
     var player = Game.player;
     var drawX = x - player.gridX;
     var drawY = y - player.gridY;
-    Game.drawSpriteXY(drawX*5+1-5, drawY*5+1, SpriteIds.TOPAZ, null, SpriteFlags.Trans);
+    Sprites.drawSpriteXY(drawX*5+1-5, drawY*5+1, SpriteIds.TOPAZ, null, SpriteFlags.Trans);
 }
 
 function ANIMATE_Draw(x, y, timer, sprite)
@@ -2062,13 +2070,13 @@ function MAP_Draw(mapX, mapY, sprite, color, flags)
     var player = Game.player;
     var drawX = mapX - player.gridX;
     var drawY = mapY - player.gridY;
-    Game.drawSprite(drawX, drawY, sprite, color, flags);
+    Sprites.drawSprite(drawX, drawY, sprite, color, flags);
     if(Map.showBuried(mapX, mapY))
     {
         var buried = Map.getBuried(mapX, mapY);
         if(buried)
         {
-            Game.drawSprite(drawX, drawY, buried, null, SpriteFlags.Trans);
+            Sprites.drawSprite(drawX, drawY, buried, null, SpriteFlags.Trans);
         }
     }
 }
@@ -2087,11 +2095,11 @@ function MAP_TryKill(mapX, mapY, addBlinkSprite)
         }
         if(sprite != SpriteIds.SPIDERWEB)
         {
-            Game.playSound(Sounds.Flash);
+            Sound.playSound(Sounds.Flash);
         }
         else
         {
-            Game.playSound(Sounds.Chop);
+            Sound.playSound(Sounds.Chop);
         }
         if(addBlinkSprite)
         {
@@ -2127,13 +2135,13 @@ function MAP_TryDig(mapX, mapY)
                     Map.set(mapX, mapY, SpriteIds.LIGHTDIRT);
                 }
                 MAP_Draw(mapX, mapY, Map.get(mapX, mapY));
-                Game.playSound(Sounds.Chop);
+                Sound.playSound(Sounds.Chop);
                 return true;
             break;
             case SpriteIds.HEAVYDIRT:
                 Map.set(mapX, mapY, SpriteIds.MEDIUMDIRT);
                 MAP_Draw(mapX, mapY, SpriteIds.MEDIUMDIRT);
-                Game.playSound(Sounds.Chop);
+                Sound.playSound(Sounds.Chop);
                 return true;
             break;
             case SpriteIds.LIGHTDIRT:
@@ -2157,30 +2165,30 @@ STATE_ShowHelp.prototype.go = function(keyCode, isRepeat, initialize)
         
         GFX.writeText("Basic Obstacles:", 5, 15);
         
-        Game.drawSpriteXY(2, 5, SpriteIds.TRAP);
+        Sprites.drawSpriteXY(2, 5, SpriteIds.TRAP);
         GFX.color(15, 0);
         GFX.locate(7, 8); GFX.print("TRAP - Avoid these at all cost!");
         
-        Game.drawSpriteXY(2, 10, SpriteIds.DOORGOLD);
-        Game.drawSpriteXY(36, 10, SpriteIds.KEYGOLD);
+        Sprites.drawSpriteXY(2, 10, SpriteIds.DOORGOLD);
+        Sprites.drawSpriteXY(36, 10, SpriteIds.KEYGOLD);
         GFX.color(15, 0);
         GFX.locate(12, 8); GFX.print("GOLD DOOR   - Opens with key");
         
-        Game.drawSpriteXY(2, 16, SpriteIds.DOORSILVER);
-        Game.drawSpriteXY(36, 16, SpriteIds.KEYSILVER);
+        Sprites.drawSpriteXY(2, 16, SpriteIds.DOORSILVER);
+        Sprites.drawSpriteXY(36, 16, SpriteIds.KEYSILVER);
         GFX.color(15, 0);
         GFX.locate(18, 8); GFX.print("SILVER DOOR - Opens with key");
         
-        Game.drawSpriteXY(2, 21, SpriteIds.LIGHTOFF);
+        Sprites.drawSpriteXY(2, 21, SpriteIds.LIGHTOFF);
         GFX.color(15, 0);
         GFX.locate(23, 8); GFX.print("LIGHTSWITCH - Turns off lights");
         
-        Game.playSound(Sounds.Notice);
+        Sound.playSound(Sounds.Notice);
     }
     
     if(keyCode != 0)
     {
-        Game.playSound(Sounds.Notice);
+        Sound.playSound(Sounds.Notice);
         return GameStates.Previous;
     }
     
@@ -2373,7 +2381,7 @@ STATE_ShowInventory.prototype.go = function(keyCode, isRepeat, initialize)
             var sy = parseInt(i / 4) * 8 + 5;
             INVENTORY_DrawSelectionBox(sx, sy, item ? item.qty : false, (i == this.selectedIndex));
             
-            Game.drawSpriteXY(x*9+5, y, item.id);
+            Sprites.drawSpriteXY(x*9+5, y, item.id);
             
             x += 1;
             if(x >= 4)
@@ -2383,7 +2391,7 @@ STATE_ShowInventory.prototype.go = function(keyCode, isRepeat, initialize)
             }
         }
         this.refresh = true;
-        Game.playSound(Sounds.Select);
+        Sound.playSound(Sounds.Select);
     }
     
     GFX.locate(24, 4);
@@ -2404,7 +2412,7 @@ STATE_ShowInventory.prototype.go = function(keyCode, isRepeat, initialize)
             {
                 player.selectedItem = item.id;
             }
-            Game.playSound(Sounds.Notice);
+            Sound.playSound(Sounds.Notice);
             return GameStates.Previous;
         }
         if(keyCode == KeyCodes.space)
@@ -2414,12 +2422,12 @@ STATE_ShowInventory.prototype.go = function(keyCode, isRepeat, initialize)
             this.timeoutId = setTimeout(function(self){
                 self.nextState = GameStates.Previous;
             }, 500, this);
-            Game.playSound(Sounds.Bonus);
+            Sound.playSound(Sounds.Bonus);
         }
-        if(keyCode == KeyCodes.right) { if((this.selectedIndex & 3) < 3) { this.selectedIndex += 1; this.refresh = true; Game.playSound(Sounds.Select); } else { Game.playSound(Sounds.Notice); } }
-        if(keyCode == KeyCodes.left ) { if((this.selectedIndex & 3) > 0) { this.selectedIndex -= 1; this.refresh = true; Game.playSound(Sounds.Select); } else { Game.playSound(Sounds.Notice); } }
-        if(keyCode == KeyCodes.down ) { if(this.selectedIndex <  4) { this.selectedIndex += 4; this.refresh = true; Game.playSound(Sounds.Select); } else { Game.playSound(Sounds.Notice); } }
-        if(keyCode == KeyCodes.up   ) { if(this.selectedIndex >= 4) { this.selectedIndex -= 4; this.refresh = true; Game.playSound(Sounds.Select); } else { Game.playSound(Sounds.Notice); } }
+        if(keyCode == KeyCodes.right) { if((this.selectedIndex & 3) < 3) { this.selectedIndex += 1; this.refresh = true; Sound.playSound(Sounds.Select); } else { Sound.playSound(Sounds.Notice); } }
+        if(keyCode == KeyCodes.left ) { if((this.selectedIndex & 3) > 0) { this.selectedIndex -= 1; this.refresh = true; Sound.playSound(Sounds.Select); } else { Sound.playSound(Sounds.Notice); } }
+        if(keyCode == KeyCodes.down ) { if(this.selectedIndex <  4) { this.selectedIndex += 4; this.refresh = true; Sound.playSound(Sounds.Select); } else { Sound.playSound(Sounds.Notice); } }
+        if(keyCode == KeyCodes.up   ) { if(this.selectedIndex >= 4) { this.selectedIndex -= 4; this.refresh = true; Sound.playSound(Sounds.Select); } else { Sound.playSound(Sounds.Notice); } }
     }
     
     if(Game.player.highlightItem)
@@ -2512,7 +2520,7 @@ STATE_ViewItem.prototype.go = function(keyCode, isRepeat, initialize)
         GFX.cls();
        
         INVENTORY_DrawItemBox(16, 6, 1, true);
-        Game.drawSpriteXY(18, 7, item.id);
+        Sprites.drawSpriteXY(18, 7, item.id);
         GFX_ColorText(item.name, 15);
         GFX_ColorText(item.description, 17);
     }
@@ -2521,7 +2529,7 @@ STATE_ViewItem.prototype.go = function(keyCode, isRepeat, initialize)
     {
         if(keyCode == KeyCodes.escape || keyCode == KeyCodes.space)
         {
-            Game.playSound(Sounds.Notice);
+            Sound.playSound(Sounds.Notice);
             return GameStates.Previous;
         }
     }
@@ -2569,27 +2577,27 @@ STATE_ConfirmPurchase.prototype.go = function(keyCode, isRepeat, initialize)
         GFX.print(Game.player.getItemQty(SpriteIds.GOLD).toString()+" PCS");
         
         INVENTORY_DrawSelectionBox(16, 6, 1, true);
-        Game.drawSpriteXY(18, 7, item.id);
+        Sprites.drawSpriteXY(18, 7, item.id);
     }
     
     if(keyCode && !isRepeat)
     {
         if(keyCode == KeyCodes.escape)
         {
-            Game.playSound(Sounds.Notice);
+            Sound.playSound(Sounds.Notice);
             return GameStates.Previous;
         }
         if(keyCode == KeyCodes.right)
         {
             this.choice = choices.No;
             this.refresh = true;
-            Game.playSound(Sounds.Select);
+            Sound.playSound(Sounds.Select);
         }
         if(keyCode == KeyCodes.left)
         {
             this.choice = choices.Yes;
             this.refresh = true;
-            Game.playSound(Sounds.Select);
+            Sound.playSound(Sounds.Select);
         }
         if(keyCode == KeyCodes.space)
         {
@@ -2619,7 +2627,7 @@ STATE_ConfirmPurchase.prototype.go = function(keyCode, isRepeat, initialize)
                     self.timeoutId  = null;
                     self.nextState = GameStates.InInventory;
                 }, 500, this);
-                Game.playSound(Sounds.Bonus);
+                Sound.playSound(Sounds.Bonus);
             }
             else
             {
@@ -2629,7 +2637,7 @@ STATE_ConfirmPurchase.prototype.go = function(keyCode, isRepeat, initialize)
                     self.timeoutId  = null;
                     self.nextState = GameStates.Previous;
                 }, 500, this);
-                Game.playSound(Sounds.Notice);
+                Sound.playSound(Sounds.Notice);
             }
             INVENTORY_DrawMiniSelectionBox(data.x, data.y, data.qty, true, data.color);
             
@@ -2780,7 +2788,7 @@ STATE_Blacksmith.prototype.go = function(keyCode, isRepeat, initialize)
             
             if(item)
             {
-                Game.drawSpriteXY(x*9+5, y, item.id, (item.qty > 0) ? null : 8);
+                Sprites.drawSpriteXY(x*9+5, y, item.id, (item.qty > 0) ? null : 8);
             }
             
             x += 1;
@@ -2791,9 +2799,9 @@ STATE_Blacksmith.prototype.go = function(keyCode, isRepeat, initialize)
             }
         }
         
-        Game.drawSpriteXY(4, 3, SpriteIds.BLACKSMITH);
+        Sprites.drawSpriteXY(4, 3, SpriteIds.BLACKSMITH);
         this.refresh = true;
-        Game.playSound(Sounds.Bonus);
+        Sound.playSound(Sounds.Bonus);
     }
     
     var lastSelectedIndex = this.selectedIndex;
@@ -2824,11 +2832,11 @@ STATE_Blacksmith.prototype.go = function(keyCode, isRepeat, initialize)
                     self.nextState = GameStates.ConfirmBuy;
                 }, 600, this);
                 INVENTORY_DrawSelectionBox(data.x, data.y, data.qty, true, data.color);
-                Game.playSound(Sounds.Select);
+                Sound.playSound(Sounds.Select);
             }
             else
             {
-                Game.playSound(Sounds.Notice);
+                Sound.playSound(Sounds.Notice);
                 if(this.intervalId !== null) clearInterval(this.intervalId);
                 if(this.timeoutId  !== null) clearTimeout(this.timeoutId);
                 this.intervalId = setInterval(function(self){
@@ -2851,13 +2859,13 @@ STATE_Blacksmith.prototype.go = function(keyCode, isRepeat, initialize)
         }
         if(keyCode == KeyCodes.escape || keyCode == KeyCodes.tab)
         {
-            Game.playSound(Sounds.Select);
+            Sound.playSound(Sounds.Select);
             return GameStates.PlayGame;
         }
-        if(keyCode == KeyCodes.right) { if((this.selectedIndex & 3) < 3) { this.selectedIndex += 1; this.refresh = true; this.noticeOverride = ""; Game.playSound(Sounds.Select); } else { Game.playSound(Sounds.Notice); } }
-        if(keyCode == KeyCodes.left ) { if((this.selectedIndex & 3) > 0) { this.selectedIndex -= 1; this.refresh = true; this.noticeOverride = ""; Game.playSound(Sounds.Select); } else { Game.playSound(Sounds.Notice); }  }
-        if(keyCode == KeyCodes.down ) { Game.playSound(Sounds.Notice); }
-        if(keyCode == KeyCodes.up   ) { Game.playSound(Sounds.Notice); }
+        if(keyCode == KeyCodes.right) { if((this.selectedIndex & 3) < 3) { this.selectedIndex += 1; this.refresh = true; this.noticeOverride = ""; Sound.playSound(Sounds.Select); } else { Sound.playSound(Sounds.Notice); } }
+        if(keyCode == KeyCodes.left ) { if((this.selectedIndex & 3) > 0) { this.selectedIndex -= 1; this.refresh = true; this.noticeOverride = ""; Sound.playSound(Sounds.Select); } else { Sound.playSound(Sounds.Notice); }  }
+        if(keyCode == KeyCodes.down ) { Sound.playSound(Sounds.Notice); }
+        if(keyCode == KeyCodes.up   ) { Sound.playSound(Sounds.Notice); }
     }
     
     GFX.color(9);
@@ -2934,12 +2942,12 @@ STATE_ShowAbout.prototype.go = function(keyCode, isRepeat, initialize)
         GFX.writeText("SPECIAL THANKS", 19, 9);
         GFX.writeText("ChipTone (SFB Games)", 21, 7);
         GFX.writeText("FFmpeg  (ffmpeg.org)", 23, 7);
-        Game.playSound(Sounds.Notice);
+        Sound.playSound(Sounds.Notice);
     }
     
     if(keyCode != 0)
     {
-        Game.playSound(Sounds.Notice);
+        Sound.playSound(Sounds.Notice);
         return GameStates.Previous;
     }
     
@@ -2961,7 +2969,7 @@ STATE_QuitYesNo.prototype.go = function(keyCode, isRepeat, initialize)
         GFX.writeText("[    QUIT GAME? (Y/N)    ]", 4, 15);
         GFX.color(null, 0);
         
-        Game.playSound(Sounds.Notice);
+        Sound.playSound(Sounds.Notice);
     }
     
     if(self.nextState == GameStates.NoChange)
@@ -2972,10 +2980,10 @@ STATE_QuitYesNo.prototype.go = function(keyCode, isRepeat, initialize)
                 self.nextState = GameStates.GameOver;
             }, 1500, self);
             GFX.cls();
-            Game.playSound(Sounds.Flash);
+            Sound.playSound(Sounds.Flash);
         }
         if(keyCode == KeyCodes.N) {
-            Game.playSound(Sounds.Notice);
+            Sound.playSound(Sounds.Notice);
             self.nextState = GameStates.Previous;
         }
     }
@@ -3005,17 +3013,17 @@ STATE_EndGame.prototype.go = function(keyCode, isRepeat, initialize)
             }
         }, delay+2000, this);
         setTimeout(function(){
-            Game.playSound(Sounds.Flash);
+            Sound.playSound(Sounds.Flash);
         }, parseInt(delay / 3));
         setTimeout(function(){
-            Game.playSound(Sounds.Flash);
+            Sound.playSound(Sounds.Flash);
         }, parseInt(delay / 3)*2);
         setTimeout(function(self){
-            Game.playSound(Sounds.Flash);
+            Sound.playSound(Sounds.Flash);
             GFX.cls();
             self.step = -3;
         }, parseInt(delay / 3)*3, this);
-        Game.playSound(Sounds.Flash);
+        Sound.playSound(Sounds.Flash);
     }
     
     var player = Game.player;
@@ -3116,12 +3124,12 @@ STATE_EndGame.prototype.go = function(keyCode, isRepeat, initialize)
             break;
         case -2:
             GFX.cls();
-            Game.drawSpriteXY(18, 6, SpriteIds.MEATLOAF);
+            Sprites.drawSpriteXY(18, 6, SpriteIds.MEATLOAF);
             GFX.writeText("MASTER  MEATLOAF", 3, 4);
-            Game.playSound(Sounds.Meatloaf);
+            Sound.playSound(Sounds.Meatloaf);
             setTimeout(function(self){
                 if(self.step < 0) {
-                    Game.playSound(Sounds.Meatloaf);
+                    Sound.playSound(Sounds.Meatloaf);
                     self.step += 1;
                 }
             }, 1500, this);
@@ -3140,7 +3148,7 @@ STATE_EndGame.prototype.go = function(keyCode, isRepeat, initialize)
     }
     if(keyCode && !isRepeat)
     {
-        Game.playSound(Sounds.Meatloaf);
+        Sound.playSound(Sounds.Meatloaf);
         this.printMonologue = true;
         this.step += 1;
         if(this.step >= this.monologue.length)
@@ -3169,7 +3177,7 @@ STATE_GameOver.prototype.go = function(keyCode, isRepeat, initialize)
             GFX.cls();
             GFX.writeText("GAME  OVER", 8, 12);
             GFX.writeText(Game.getTimeString(), 15, 15);
-            Game.playSound(Sounds.GameOver);
+            Sound.playSound(Sounds.GameOver);
             this.step += 1;
             break;
         case 1:
@@ -3185,8 +3193,8 @@ STATE_GameOver.prototype.go = function(keyCode, isRepeat, initialize)
             if(keyCode && !isRepeat)
             {
                 GFX.cls();
-                Game.stopSound(Sounds.GameOver);
-                Game.playSound(Sounds.Meatloaf);
+                Sound.stopSound(Sounds.GameOver);
+                Sound.playSound(Sounds.Meatloaf);
                 setTimeout(function(self){ self.step += 1 }, 1000, this);
                 this.step += 1;
             }
@@ -3212,7 +3220,7 @@ STATE_GameOver.prototype.go = function(keyCode, isRepeat, initialize)
             if(keyCode != 0)
             {
                 GFX.cls();
-                Game.playSound(Sounds.Meatloaf);
+                Sound.playSound(Sounds.Meatloaf);
                 setTimeout(function(self){ self.step += 1 }, 1000, this);
                 this.step += 1;
             }
@@ -3237,19 +3245,19 @@ STATE_GameOver.prototype.go = function(keyCode, isRepeat, initialize)
             GFX.writeText("CONGRATULATIONS!", 4, 15);
             GFX.writeText("You found all the secret items", 6, 15);
             
-            Game.drawSprite(18, 7, GOLDENDOVE);
-            Game.drawSprite(18, 12, SUPREMEEYE);
-            Game.drawSprite(18, 17, CRYSTALSNAKE);
+            Sprites.drawSprite(18, 7, GOLDENDOVE);
+            Sprites.drawSprite(18, 12, SUPREMEEYE);
+            Sprites.drawSprite(18, 17, CRYSTALSNAKE);
             
             if(Game.seconds >= 300)
             {
                 GFX.writeText("Now find them all in under 5 minutes!", 23, 15);
-                Game.playSound(Sounds.Forgot);
+                Sound.playSound(Sounds.Forgot);
             }
             else
             {
                 GFX.writeText("Thanks for playing!", 23, 15);
-                Game.playSound(Sounds.Start);
+                Sound.playSound(Sounds.Start);
             }
         }
         else
@@ -3259,17 +3267,17 @@ STATE_GameOver.prototype.go = function(keyCode, isRepeat, initialize)
             
             //if(player.inv.goldenDove == 0)
             //{
-            //    Game.drawSpriteXY(18, 7, SpriteIds.GOLDENDOVE);
+            //    Sprites.drawSpriteXY(18, 7, SpriteIds.GOLDENDOVE);
             //    GFX.color(14); GFX.locate(9, 3); GFX.print("Golden Dove");
             //}
             //if(player.inv.supremeEye == 0)
             //{
-            //    Game.drawSpriteXY(18, 12, SpriteIds.SUPREMEEYE);
+            //    Sprites.drawSpriteXY(18, 12, SpriteIds.SUPREMEEYE);
             //    GFX.color(9); GFX.locate(14, 3); GFX.print("Supreme Eye");
             //}
             //if(player.inv.crystalSnake == 0)
             //{
-            //    Game.drawSpriteXY(18, 17, SpriteIds.CRYSTALSNAKE);
+            //    Sprites.drawSpriteXY(18, 17, SpriteIds.CRYSTALSNAKE);
             //    GFX.color(10); GFX.locate(19, 3); GFX.print("Crystal Snake");
             //}
             
@@ -3281,7 +3289,7 @@ STATE_GameOver.prototype.go = function(keyCode, isRepeat, initialize)
             {
                 GFX.writeText("Find these items next time", 23, 15);
             }
-            Game.playSound(Sounds.Forgot);
+            Sound.playSound(Sounds.Forgot);
         }
     }
     
@@ -3308,7 +3316,8 @@ function SYSTEM_Init()
 {
     GFX.init('gfxtable');
     Input.init('gamewindow');
-    Game.init(GFX, Input);
+    Game.init(Input);
+    Sprites.init(GFX)
     DATA_LoadSprites();
 }
 
@@ -3327,41 +3336,41 @@ function DATA_LoadSprites()
             sprite.rows[y].color      = row[1];
             sprite.rows[y].background = row[2];
         }
-        Game.sprites[n] = sprite; n += 1;
+        Sprites.sprites[n] = sprite; n += 1;
     }
 }
 
 function DATA_LoadSounds()
 {
-    Game.setSoundPath("sound/");
-    Sounds.Blocked     = Game.addSound("blocked.mp3");
-    Sounds.DoorBlocked = Game.addSound("blocked2.mp3");
-    Sounds.PushWall    = Game.addSound("push.mp3");
-    Sounds.PickupKey   = Game.addSound("key.mp3");
-    Sounds.GameOver    = Game.addSound("gameover.mp3");
-    Sounds.Flash       = Game.addSound("flash.mp3");
-    Sounds.Reveal      = Game.addSound("reveal.mp3");
-    Sounds.Reveal2     = Game.addSound("reveal2.mp3");
-    Sounds.Unlock      = Game.addSound("unlock.mp3");
-    Sounds.Bonus       = Game.addSound("bonus.mp3");
-    Sounds.LightSwitch = Game.addSound("switch0.mp3");
-    Sounds.BombTick    = Game.addSound("bombtick.wav");
-    Sounds.Ignite      = Game.addSound("switch1.mp3");
-    Sounds.Notice      = Game.addSound("notice.mp3");
-    Sounds.Forgot      = Game.addSound("forgot.mp3");
-    Sounds.Meatloaf    = Game.addSound("meatloaf.mp3");
-    Sounds.Respawn     = Game.addSound("respawn.mp3");
-    Sounds.Move        = Game.addSound("move.mp3");
-    Sounds.Title       = Game.addSound("title.mp3");
-    Sounds.Chirp       = Game.addSound("chirp.wav");
-    Sounds.Chop        = Game.addSound("chop.wav");
-    Sounds.Select      = Game.addSound("select.wav");
-    Sounds.EnterCave   = Game.addSound("enter3.wav");
-    Sounds.Point       = Game.addSound("point.wav");
-    Sounds.Mystery     = Game.addSound("mystery.wav");
+    Sound.setSoundPath("sound/");
+    Sounds.Blocked     = Sound.addSound("blocked.mp3");
+    Sounds.DoorBlocked = Sound.addSound("blocked2.mp3");
+    Sounds.PushWall    = Sound.addSound("push.mp3");
+    Sounds.PickupKey   = Sound.addSound("key.mp3");
+    Sounds.GameOver    = Sound.addSound("gameover.mp3");
+    Sounds.Flash       = Sound.addSound("flash.mp3");
+    Sounds.Reveal      = Sound.addSound("reveal.mp3");
+    Sounds.Reveal2     = Sound.addSound("reveal2.mp3");
+    Sounds.Unlock      = Sound.addSound("unlock.mp3");
+    Sounds.Bonus       = Sound.addSound("bonus.mp3");
+    Sounds.LightSwitch = Sound.addSound("switch0.mp3");
+    Sounds.BombTick    = Sound.addSound("bombtick.wav");
+    Sounds.Ignite      = Sound.addSound("switch1.mp3");
+    Sounds.Notice      = Sound.addSound("notice.mp3");
+    Sounds.Forgot      = Sound.addSound("forgot.mp3");
+    Sounds.Meatloaf    = Sound.addSound("meatloaf.mp3");
+    Sounds.Respawn     = Sound.addSound("respawn.mp3");
+    Sounds.Move        = Sound.addSound("move.mp3");
+    Sounds.Title       = Sound.addSound("title.mp3");
+    Sounds.Chirp       = Sound.addSound("chirp.wav");
+    Sounds.Chop        = Sound.addSound("chop.wav");
+    Sounds.Select      = Sound.addSound("select.wav");
+    Sounds.EnterCave   = Sound.addSound("enter3.wav");
+    Sounds.Point       = Sound.addSound("point.wav");
+    Sounds.Mystery     = Sound.addSound("mystery.wav");
     
-    Sounds.Start       = Game.addSound("start.mp3");
-    Sounds.Enter       = Game.addSound("enter.mp3");
+    Sounds.Start       = Sound.addSound("start.mp3");
+    Sounds.Enter       = Sound.addSound("enter.mp3");
 }
 
 function DATA_LoadMap()
@@ -3713,18 +3722,18 @@ var SoundsAreLoaded = false;
 function loading()
 {
     var numLoaded = 0;
-    for(var i = 0; i < Game.sounds.length; i++)
+    for(var i = 0; i < Sound.sounds.length; i++)
     {
-        var sound = Game.sounds[i];
+        var sound = Sound.sounds[i];
         if(sound.loaded)
         {
             numLoaded += 1;
         }
     }
-    var percent = parseInt((numLoaded / Game.sounds.length)*100).toString()+"%";
+    var percent = parseInt((numLoaded / Sound.sounds.length)*100).toString()+"%";
     GFX.locate(14, 1); GFX.print(TEXT_Repeat(" ", 40)); GFX.writeText("Loading..."+percent, 12, 15);
     
-    if(numLoaded == Game.sounds.length)
+    if(numLoaded == Sound.sounds.length)
     {
         clearInterval(loadingInterval);
         SoundsAreLoaded   = true;

@@ -1,7 +1,9 @@
 /**
- * This file is part of CATLOAF 2600.
- * Copyright (C) 2007-2020 Joe King - All Rights Reserved
- * https://games.joeking.us/
+ * This file is part of CATLOAF ADVENTURE.
+ * @author Joe King
+ * @copyright Joe King LLC 2020
+ * @depends sound
+ * @depends sprites
  */
 "use strict";
 
@@ -116,7 +118,12 @@ GridType.prototype.hasBit = function(x, y, bit)
         return ((this.grid[x][y] & bit) > 0) ? true : false;
     }
 }
-
+/**
+ * @depends doorType
+ * @depends gridType
+ * @depends sound
+ * @depends sprites
+ */
 var Map = {
     
     mobs: [],
@@ -217,7 +224,7 @@ var Map = {
         var color = Map.isMirror(x, y) ? 8 : null;
         var flip = Map.isFlip(x, y);
         
-        Game.drawSprite(drawX, drawY, spriteId, color, flip);
+        Sprites.drawSprite(drawX, drawY, spriteId, color, flip);
     },
     
     /**
@@ -232,7 +239,7 @@ var Map = {
         var drawY = y - player.gridY;
         
         this.sprites.set(x, y, spriteId);
-        Game.drawSprite(drawX, drawY, spriteId);
+        Sprites.drawSprite(drawX, drawY, spriteId);
         
         //this.updates.push({x: x, y: y, id: spriteId});
     },
@@ -307,7 +314,7 @@ var Map = {
                 this.sprites.set(door.x, door.y, door.closed.sprite);
                 this.setPassable(door.x, door.y, door.closed.passable);
                 this.showBuried(door.x, door.y, door.closed.showBuried);
-                Game.drawSprite(door.x-player.gridX, door.y-player.gridY, door.closed.sprite);
+                Sprites.drawSprite(door.x-player.gridX, door.y-player.gridY, door.closed.sprite);
             }
         }
         return changed;
@@ -326,7 +333,7 @@ var Map = {
             {
                 var spriteToDraw = (this.sprites.get(door.x, door.y) == door.closed.sprite) ? door.open.sprite : door.closed.sprite;
                 this.sprites.set(door.x, door.y, spriteToDraw);
-                Game.drawSprite(door.x-player.gridX, door.y-player.gridY, spriteToDraw);
+                Sprites.drawSprite(door.x-player.gridX, door.y-player.gridY, spriteToDraw);
                 if(this.sprites.get(door.x, door.y) == door.open.sprite)
                 {
                     this.setPassable(door.x, door.y, door.open.passable);
@@ -340,7 +347,7 @@ var Map = {
                 var buried = Map.getBuried(door.x, door.y);
                 if(this.showBuried(door.x, door.y) && buried)
                 {
-                    Game.drawSprite(door.x-player.gridX, door.y-player.gridY, buried, null, SpriteFlags.Trans);
+                    Sprites.drawSprite(door.x-player.gridX, door.y-player.gridY, buried, null, SpriteFlags.Trans);
                 }
             }
         }
@@ -413,14 +420,14 @@ var Map = {
             door.y += y;
             this.sprites.set(door.x, door.y, spriteId);
             this.setPassable(door.x, door.y, false);
-            Game.drawSprite(door.x-player.gridX, door.y-player.gridY, spriteId);
+            Sprites.drawSprite(door.x-player.gridX, door.y-player.gridY, spriteId);
         }
         for(var n = 0; n < oldDoors.length; n++)
         {
             var door = oldDoors[n];
             if(this.sprites.get(door.x, door.y) != spriteId)
             {
-                Game.drawSprite(door.x-player.gridX, door.y-player.gridY, this.sprites.get(door.x, door.y));
+                Sprites.drawSprite(door.x-player.gridX, door.y-player.gridY, this.sprites.get(door.x, door.y));
             }
         }
         return true;
@@ -547,12 +554,12 @@ var Map = {
         if(RoomsRevealed[roomId] == false)
         {
             RoomsRevealed[roomId] = true;
-            //Game.playSound(Sounds.Reveal); // TODO -- sounds horrid! replace!!!
-            Game.playSound(Sounds.Reveal2);
+            //Sound.playSound(Sounds.Reveal); // TODO -- sounds horrid! replace!!!
+            Sound.playSound(Sounds.Reveal2);
         }
         else
         {
-            Game.playSound(Sounds.Reveal2);
+            Sound.playSound(Sounds.Reveal2);
         }
     },
     /**
@@ -593,13 +600,13 @@ var Map = {
                 var mapX = x + player.gridX;
                 var mapY = y + player.gridY;
                 var spriteId = this.sprites.get(mapX, mapY);
-                Game.drawSprite(x, y, spriteId);
+                Sprites.drawSprite(x, y, spriteId);
                 if(this.showBuried(mapX, mapY))
                 {
                     var buried = this.getBuried(mapX, mapY);
                     if(buried)
                     {
-                        Game.drawSprite(x, y, buried, null, SpriteFlags.Trans);
+                        Sprites.drawSprite(x, y, buried, null, SpriteFlags.Trans);
                     }
                 }
             }
